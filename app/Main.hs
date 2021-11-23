@@ -20,8 +20,8 @@ type ContextItems = [ContextItem]
 
 makeContextItems :: ContextItems
 makeContextItems =
-  [ Command domainCreateName,
-    Repository dataCreateName,
+  [ Repository dataCreateName,
+    Command domainCreateName,
     Controller presentationCreateName
   ]
 
@@ -29,9 +29,19 @@ dataCreateName :: DataCreateName
 dataCreateName input = MaybeT $ do
   return $ Just input
 
+domainGetDependency :: Context DataCreateName
+domainGetDependency = MaybeT $ do
+  contextItems <- ask
+  let contextItem = head contextItems
+
+  case contextItem of
+    Repository repo -> return $ Just repo
+    _ -> return Nothing
+
 domainCreateName :: DomainCreateName
-domainCreateName input = MaybeT $ do
-  return $ Just input
+domainCreateName input = do
+  repository <- domainGetDependency
+  repository input
 
 presentationCreateName :: PresentationCreateName
 presentationCreateName input = do
