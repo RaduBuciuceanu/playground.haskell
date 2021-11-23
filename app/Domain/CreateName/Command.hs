@@ -1,12 +1,19 @@
 module Domain.CreateName.Command (createName) where
 
-import qualified Domain.CreateName.Context as Context
 import Control.Monad.Reader
+import Control.Monad.Trans.Maybe
+import Domain.CreateName.Context
 
-createName :: Context.Command
-createName = do
-  -- context <- ask
-  -- let repo = head context 
-  
-  let value = Just "S"
-  return value
+getRepository :: Context CreateNameRepository
+getRepository = MaybeT $ do
+  contextItems <- ask
+  let contextItem = head contextItems
+
+  case contextItem of
+    Repository repo -> return $ Just repo
+    _ -> return Nothing
+
+createName :: CreateNameCommand
+createName input = do
+  repository <- getRepository
+  repository input
