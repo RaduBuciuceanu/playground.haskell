@@ -49,6 +49,7 @@ executable playground-exe
       Ioc.Commands
       Ioc.Container
       Ioc.Repositories
+      Presentation.CreateName
       Paths_playground
   hs-source-dirs:
       app
