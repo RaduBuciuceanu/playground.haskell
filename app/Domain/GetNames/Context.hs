@@ -14,3 +14,10 @@ data ContextItem
   | Command GetNamesCommand
 
 type ContextItems = [ContextItem]
+
+askRepository :: Context GetNamesRepository
+askRepository = MaybeT $ do
+  contextItems <- ask
+  let repository = head $ [repo | Repository repo <- contextItems]
+
+  return $ Just repository
