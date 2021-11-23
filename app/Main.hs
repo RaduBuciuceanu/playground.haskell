@@ -8,8 +8,8 @@ type Config = Map String Int
 
 getConfig :: String -> MaybeT (Reader Config) Int
 getConfig key = MaybeT $ do
-  config <- ask
-  return $ Map.lookup key config
+  configs <- ask
+  return $ Map.lookup key configs
 
 getValues :: MaybeT (Reader Config) (Int, Int)
 getValues = do
@@ -19,12 +19,13 @@ getValues = do
 
 perform :: Maybe (Int, Int)
 perform = do
-  let maybe = runMaybeT getValues
   let config = fromList [("a", 1), ("b", 2)]
-  runReader maybe config
+  runReader (runMaybeT getValues) config
 
 main :: IO ()
 main = do
   let result = perform
 
-  putStrLn $ show foo 
+  case result of
+    Just value -> print $ show value
+    Nothing -> print "Hello"
