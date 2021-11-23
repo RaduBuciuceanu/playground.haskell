@@ -1,7 +1,8 @@
 module Data.GetNames where
 
-import Ioc.Repositories 
+import Control.Monad.Trans.Maybe
+import Domain.GetNames.Context
 
-getNames :: GetNames
-getNames parameter =
-  ["Ion"]
+getNames :: GetNamesRepository
+getNames _parameter = MaybeT $ do
+  return $ Just ["Ion"]
