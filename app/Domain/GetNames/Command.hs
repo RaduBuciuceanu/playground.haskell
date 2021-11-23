@@ -14,6 +14,6 @@ getRepository = MaybeT $ do
     _ -> return Nothing
 
 getNames :: GetNamesCommand
-getNames input = do
+getNames parameter = do
   repository <- getRepository
-  repository input
+  repository parameter
