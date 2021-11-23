@@ -5,12 +5,12 @@ import Control.Monad.Trans.Maybe
 
 type Context tOutput = MaybeT (Reader ContextItems) tOutput
 
-type Repository = String -> Context String
+type CreateNameRepository = String -> Context String
 
-type Command = String -> Context String
+type CreateNameCommand = String -> Context String
 
 data ContextItem
-  = Repository Repository
-  | Command Command
+  = Repository CreateNameRepository
+  | Command CreateNameCommand
 
 type ContextItems = [ContextItem]
