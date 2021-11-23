@@ -1,6 +1,8 @@
 module Data.CreateName where
 
-import qualified Domain.CreateName.Context as Context
+import Control.Monad.Trans.Maybe
+import Domain.CreateName.Context
 
-createName :: Context.Repository
-createName value = Just "Salut"
+createName :: CreateNameRepository
+createName input = MaybeT $ do
+  return $ Just input
