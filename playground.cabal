@@ -48,6 +48,7 @@ executable playground-exe
       Domain.GetNames.Command
       Domain.GetNames.Context
       Presentation.CreateName
+      Presentation.GetNames
       Paths_playground
   hs-source-dirs:
       app
