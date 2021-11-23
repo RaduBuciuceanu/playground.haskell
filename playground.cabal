@@ -45,10 +45,8 @@ executable playground-exe
       Data.UpdateName
       Domain.CreateName.Command
       Domain.CreateName.Context
-      Domain.GetNames
-      Ioc.Commands
-      Ioc.Container
-      Ioc.Repositories
+      Domain.GetNames.Command
+      Domain.GetNames.Context
       Presentation.CreateName
       Paths_playground
   hs-source-dirs:

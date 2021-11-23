@@ -1,7 +1,5 @@
 module Data.UpdateName where
 
-import Ioc.Repositories
-
-updateName :: UpdateName
+updateName :: String -> String
 updateName value =
   value
