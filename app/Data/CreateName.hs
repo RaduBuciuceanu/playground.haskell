@@ -1,7 +1,6 @@
 module Data.CreateName where
 
-import Ioc.Repositories
+import qualified Domain.CreateName.Context as Context
 
-createName :: CreateName
-createName value =
-  value
+createName :: Context.Repository
+createName value = Just "Salut"
