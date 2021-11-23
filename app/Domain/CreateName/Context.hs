@@ -1,15 +1,16 @@
 module Domain.CreateName.Context where
 
 import Control.Monad.Reader
-import Data.List
-import Data.Typeable
+import Control.Monad.Trans.Maybe
 
-type Repository = String -> Maybe String
+type Context tOutput = MaybeT (Reader ContextItems) tOutput
 
-type Command = String -> Maybe String
+type Repository = String -> Context String
 
-data Item
+type Command = String -> Context String
+
+data ContextItem
   = Repository Repository
   | Command Command
 
-type Context = [Item]
+type ContextItems = [ContextItem]
