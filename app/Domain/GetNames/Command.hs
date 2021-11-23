@@ -1,4 +1,4 @@
-module Domain.GetNames.Command where
+module Domain.GetNames.Command (getNames) where
 
 import Control.Monad.Reader
 import Control.Monad.Trans.Maybe
