@@ -3,7 +3,7 @@ module Main where
 import Control.Monad.Reader
 import Control.Monad.Trans.Maybe
 
-type Context tOutput = MaybeT (Reader Items) tOutput
+type Context tOutput = MaybeT (Reader ContextItems) tOutput
 
 type DataCreateName = String -> Context String
 
@@ -11,14 +11,14 @@ type DomainCreateName = String -> Context String
 
 type PresentationCreateName = String -> Maybe String
 
-data Item
+data ContextItem
   = Command DomainCreateName
   | Repository DataCreateName
   | Controller PresentationCreateName
 
-type Items = [Item]
+type ContextItems = [ContextItem]
 
-makeContextItems :: Items
+makeContextItems :: ContextItems
 makeContextItems =
   [ Command domainCreateName,
     Repository dataCreateName,
