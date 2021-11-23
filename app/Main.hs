@@ -1,38 +1,30 @@
 module Main where
 
 import Control.Monad.Reader
-import qualified Data.CreateName
-import qualified Data.GetNames
-import qualified Data.UpdateName
-import qualified Domain.GetNames
-import qualified Ioc.Commands as Commands
-import qualified Ioc.Container as Ioc
-import qualified Ioc.Repositories as Repositories
+import Control.Monad.Trans.Maybe
+import Data.Map as Map
 
-container :: Ioc.Container
-container =
-  [ Ioc.Command (Commands.GetNames Domain.GetNames.getNames),
-    Ioc.Repository (Repositories.CreateName Data.CreateName.createName),
-    Ioc.Repository (Repositories.UpdateName Data.UpdateName.updateName),
-    Ioc.Repository (Repositories.GetNames Data.GetNames.getNames)
-  ]
+type Config = Map String Int
 
-innerPerform :: ReaderT Ioc.Container IO ()
-innerPerform = do
-  container <- ask
+getConfig :: String -> MaybeT (Reader Config) Int
+getConfig key = MaybeT $ do
+  config <- ask
+  return $ Map.lookup key config
 
-  liftIO $ putStrLn "Hey from inside innerPerform..."
+getValues :: MaybeT (Reader Config) (Int, Int)
+getValues = do
+  a <- getConfig "a"
+  b <- getConfig "b"
+  return (a, b)
 
-perform :: ReaderT Ioc.Container IO ()
+perform :: Maybe (Int, Int)
 perform = do
-  container <- ask
-  let Ioc.Command command = head container
-  let Commands.GetNames getNames = command
-  let name = head $ getNames "parameter"
-
-  liftIO $ putStrLn name
-  innerPerform
+  let maybe = runMaybeT getValues
+  let config = fromList [("a", 1), ("b", 2)]
+  runReader maybe config
 
 main :: IO ()
 main = do
-  runReaderT perform container
+  let result = perform
+
+  putStrLn $ show foo 
