@@ -2,30 +2,46 @@ module Main where
 
 import Control.Monad.Reader
 import Control.Monad.Trans.Maybe
-import Data.Map as Map
 
-type Config = Map String Int
+type Context tOutput = MaybeT (Reader Items) tOutput
 
-getConfig :: String -> MaybeT (Reader Config) Int
-getConfig key = MaybeT $ do
-  configs <- ask
-  return $ Map.lookup key configs
+type DataCreateName = String -> Context String
 
-getValues :: MaybeT (Reader Config) (Int, Int)
-getValues = do
-  a <- getConfig "a"
-  b <- getConfig "b"
-  return (a, b)
+type DomainCreateName = String -> Context String
 
-perform :: Maybe (Int, Int)
-perform = do
-  let config = fromList [("a", 1), ("b", 2)]
-  runReader (runMaybeT getValues) config
+type PresentationCreateName = String -> Maybe String
+
+data Item
+  = Command DomainCreateName
+  | Repository DataCreateName
+  | Controller PresentationCreateName
+
+type Items = [Item]
+
+makeContextItems :: Items
+makeContextItems =
+  [ Command domainCreateName,
+    Repository dataCreateName,
+    Controller presentationCreateName
+  ]
+
+dataCreateName :: DataCreateName
+dataCreateName input = MaybeT $ do
+  return $ Just input
+
+domainCreateName :: DomainCreateName
+domainCreateName input = MaybeT $ do
+  return $ Just input
+
+presentationCreateName :: PresentationCreateName
+presentationCreateName input = do
+  let maybeT = runMaybeT $ domainCreateName input
+  runReader maybeT makeContextItems
 
 main :: IO ()
 main = do
-  let result = perform
+  let name = presentationCreateName "Ion"
 
-  case result of
-    Just value -> print $ show value
-    Nothing -> print "Hello"
+  case name of
+    Just value -> print value
+    Nothing -> print "500"
