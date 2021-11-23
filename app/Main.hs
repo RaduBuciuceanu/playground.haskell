@@ -1,10 +1,10 @@
 module Main where
 
-import Presentation.GetNames
+import Presentation.CreateName
 
 main :: IO ()
 main = do
-  let names = getNames "caca"
+  let names = createName "caca"
 
   case names of
     Just value -> print value
