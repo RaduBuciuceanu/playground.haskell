@@ -14,3 +14,10 @@ data ContextItem
   | Command CreateNameCommand
 
 type ContextItems = [ContextItem]
+
+askRepository :: Context CreateNameRepository
+askRepository = MaybeT $ do
+  contextItems <- ask
+  let repository = head $ [repo | Repository repo <- contextItems]
+
+  return $ Just repository
